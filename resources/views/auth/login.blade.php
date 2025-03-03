@@ -3,7 +3,7 @@
         <div class="w-full max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
             <h2 class="text-2xl font-bold mb-4 text-center">Sign In</h2>
 
-            <form action="" method="POST">
+            <form action="{{ route('authUser') }}" method="POST">
                 @csrf
                 <div class="mb-4">
                     <label class="block text-gray-700 font-medium">Email</label>

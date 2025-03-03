@@ -3,7 +3,7 @@
         <div class="w-full max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg">
             <h2 class="text-2xl font-bold mb-4 text-center">Create an Account</h2>
 
-            <form action="" method="POST">
+            <form action="{{ route('registerUser') }}" method="POST">
                 @csrf
 
 
@@ -44,8 +44,6 @@
                 <button type="submit" class="w-full bg-cyan-500 text-white py-2 rounded hover:bg-cyan-600 transition">
                     Register
                 </button>
-
-                <!-- Already Have an Account? -->
                 <p class="text-center text-gray-600 mt-4">
                     Already have an account? <a href="/login" class="text-cyan-500 hover:underline">Sign In</a>
                 </p>

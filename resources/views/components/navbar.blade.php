@@ -8,6 +8,10 @@
             @if(Route::has("login"))
             @auth
             <a href="#" class="text-gray-600 hover:text-gray-900">Account</a>
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit">Logout</button>
+            </form>
             @else
             <a href="/login" class="text-gray-600 hover:text-gray-900">Login</a>
             @endauth
