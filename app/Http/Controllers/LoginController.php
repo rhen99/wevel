@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
@@ -26,8 +27,9 @@ class LoginController extends Controller
             "password" => "required|min:8"
         ]);
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
+        if (!Auth::attempt($credentials)) {
+            throw ValidationException::withMessages(["email" => "Invalid Credentials"]);
+        } else {
             return redirect()->intended("/dashboard");
         }
     }
