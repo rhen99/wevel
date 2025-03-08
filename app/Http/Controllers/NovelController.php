@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Novel;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class NovelController extends Controller
 {
@@ -13,7 +16,38 @@ class NovelController extends Controller
 
     public function create()
     {
-        return view("auth.create");
+        $genres = [
+            'fantasy' => 'Fantasy',
+            'sci_fi' => 'Science Fiction',
+            'mystery' => 'Mystery',
+            'thriller' => 'Thriller',
+            'romance' => 'Romance',
+            'horror' => 'Horror',
+            'historical' => 'Historical Fiction',
+            'adventure' => 'Adventure',
+            'dystopian' => 'Dystopian',
+            'slice_of_life' => 'Slice of Life',
+            'drama' => 'Drama',
+            'action' => 'Action',
+            'comedy' => 'Comedy',
+            'supernatural' => 'Supernatural',
+            'lit_rpg' => 'LitRPG',
+            'martial_arts' => 'Martial Arts',
+            'psychological' => 'Psychological',
+            'cyberpunk' => 'Cyberpunk',
+            'steampunk' => 'Steampunk',
+            'tragedy' => 'Tragedy',
+            'isekai' => 'Isekai',
+            'mecha' => 'Mecha',
+            'wuxia' => 'Wuxia',
+            'xianxia' => 'Xianxia',
+            'xuanhuan' => 'Xuanhuan',
+            'sports' => 'Sports',
+            'mature' => 'Mature',
+            'harem' => 'Harem',
+            'reverse_harem' => 'Reverse Harem'
+        ];
+        return view("auth.create", compact("genres"));
     }
 
     /**
@@ -21,7 +55,29 @@ class NovelController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:255',
+            'description' => 'string|max:255|ascii',
+            'genres' => 'required|array|min:1',
+            'genres.*' => 'string|in:fantasy,sci_fi,mystery,thriller,romance,horror,action,comedy,slice_of_life,drama,adventure,dystopian,sports,mature,harem,reverse_harem'
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $genresArray = $request->input('genres');
+
+        $genresString = implode(",", $genresArray);
+        $user = auth()->user();
+
+        $user->novels()->create([
+            "title" => $request->title,
+            "description" => $request->description,
+            "genre" => $genresString
+        ]);
+
+        return redirect()->route('home')->with(["success", "Novel Created"]);
     }
 
     /**

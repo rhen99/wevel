@@ -7,12 +7,17 @@ use App\Models\User;
 
 class Novel extends Model
 {
+    protected $fillable = [
+        "title",
+        "description",
+        "genre"
+    ];
     public function user()
     {
-        $this->belongsTo(User::class);
+        return $this->belongsTo(User::class);
     }
     public function chapters()
     {
-        $this->hasMany(Novel::class);
+        return $this->hasMany(Novel::class);
     }
 }
