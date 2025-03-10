@@ -9,10 +9,6 @@ use Illuminate\Support\Facades\Validator;
 
 class NovelController extends Controller
 {
-    public function index()
-    {
-        //
-    }
 
     public function create()
     {
@@ -47,7 +43,7 @@ class NovelController extends Controller
             'harem' => 'Harem',
             'reverse_harem' => 'Reverse Harem'
         ];
-        return view("auth.create", compact("genres"));
+        return view("novel.create", compact("genres"));
     }
 
     /**
@@ -86,6 +82,7 @@ class NovelController extends Controller
     public function show(string $id)
     {
         //
+
     }
 
     /**
@@ -94,6 +91,12 @@ class NovelController extends Controller
     public function edit(string $id)
     {
         //
+        $novel = Novel::find($id);
+
+        if ($novel->user_id !== auth()->user()->id) {
+            return redirect()->back();
+        }
+        return view("novel.edit")->with("novel", $novel);
     }
 
     /**
@@ -109,6 +112,14 @@ class NovelController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $novel = Novel::findOrFail($id);
+
+        if ($novel->user_id !== auth()->user()->id) {
+            return redirect()->back();
+        }
+
+        $novel->delete();
+
+        return redirect()->back();
     }
 }

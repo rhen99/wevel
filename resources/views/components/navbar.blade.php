@@ -15,6 +15,7 @@
 
 
                 <div class="hidden absolute left-0 mt-2 w-48 bg-white border border-gray-200" id="dropdownMenu">
+                    <a href="{{ route('home') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Dashboard</a>
                     <a href="{{ route('novels.create') }}"
                         class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Create Novel</a>
                     <a href="#" class="logoutBtn block px-4 py-2 text-gray-700 hover:bg-gray-100">Sign Out</a>

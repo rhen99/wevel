@@ -11,6 +11,7 @@ class HomeController extends Controller
 
     public function home()
     {
-        return view("auth.home");
+        $novels = auth()->user()->novels()->get();
+        return view("auth.home")->with("novels", $novels);
     }
 }
