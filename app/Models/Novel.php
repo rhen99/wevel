@@ -10,7 +10,8 @@ class Novel extends Model
     protected $fillable = [
         "title",
         "description",
-        "genre"
+        "genre",
+        "cover_image"
     ];
     public function user()
     {

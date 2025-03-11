@@ -3,9 +3,10 @@
         <h2 class="text-xl font-semibold mb-4">Edit Novel</h2>
         <form method="post" action="{{ route('novels.update', ['novel'=> $novel->id]) }}">
             @csrf
+            @method('PUT')
             <div class="mb-4">
                 <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
-                <input type="text" id="title" name="title" value="{{ old('title') }}"
+                <input type="text" id="title" name="title" value="{{ $novel->title }}"
                     class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-cyan-500 focus:border-cyan-500"
                     placeholder="Enter title">
                 @error('title') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
@@ -14,11 +15,21 @@
                 <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
                 <textarea id="description" name="description" rows="4"
                     class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-cyan-500 focus:border-cyan-500"
-                    placeholder="Enter description">
-                    {{ old('description') }}
-                </textarea>
+                    placeholder="Enter description">{{ $novel->description }}</textarea>
                 @error('description') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
             </div>
+            <div class="mb-4">
+                <h3 class="text-lg font-semibold mb-4">Choose Novel Genre</h3>
+                @foreach($genres as $key => $name)
+                <label>
+                    <input type="checkbox" name="genres[]" value="{{ $key }}" {{ in_array($key, explode(" ", $novel->genre ?? ''))
+                    ? 'checked' : '' }}>
+                    {{ $name }}
+                </label><br>
+                @endforeach
+                @error('genres') <p class=" text-red-500 text-sm">{{ $message }}</p> @enderror
+            </div>
+
             <button type="submit" class="w-full bg-cyan-500 text-white p-2 rounded-md hover:bg-cyan-600">Update</button>
         </form>
     </div>

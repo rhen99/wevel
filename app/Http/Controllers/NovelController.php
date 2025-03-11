@@ -55,7 +55,8 @@ class NovelController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'string|max:255|ascii',
             'genres' => 'required|array|min:1',
-            'genres.*' => 'string|in:fantasy,sci_fi,mystery,thriller,romance,horror,action,comedy,slice_of_life,drama,adventure,dystopian,sports,mature,harem,reverse_harem'
+            'genres.*' => 'string|in:fantasy,sci_fi,mystery,thriller,romance,horror,action,comedy,slice_of_life,drama,adventure,dystopian,sports,mature,harem,reverse_harem',
+            'cover_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -67,10 +68,15 @@ class NovelController extends Controller
         $genresString = implode(",", $genresArray);
         $user = auth()->user();
 
+        $imagePath = null;
+        if ($request->hasFile('cover_image')) {
+            $imagePath = $request->file('cover_image')->store('novel_covers', 'public');
+        }
         $user->novels()->create([
             "title" => $request->title,
             "description" => $request->description,
-            "genre" => $genresString
+            "genre" => $genresString,
+            "cover_image" => $imagePath
         ]);
 
         return redirect()->route('home')->with(["success", "Novel Created"]);
@@ -91,12 +97,44 @@ class NovelController extends Controller
     public function edit(string $id)
     {
         //
+        $genres = [
+            'fantasy' => 'Fantasy',
+            'sci_fi' => 'Science Fiction',
+            'mystery' => 'Mystery',
+            'thriller' => 'Thriller',
+            'romance' => 'Romance',
+            'horror' => 'Horror',
+            'historical' => 'Historical Fiction',
+            'adventure' => 'Adventure',
+            'dystopian' => 'Dystopian',
+            'slice_of_life' => 'Slice of Life',
+            'drama' => 'Drama',
+            'action' => 'Action',
+            'comedy' => 'Comedy',
+            'supernatural' => 'Supernatural',
+            'lit_rpg' => 'LitRPG',
+            'martial_arts' => 'Martial Arts',
+            'psychological' => 'Psychological',
+            'cyberpunk' => 'Cyberpunk',
+            'steampunk' => 'Steampunk',
+            'tragedy' => 'Tragedy',
+            'isekai' => 'Isekai',
+            'mecha' => 'Mecha',
+            'wuxia' => 'Wuxia',
+            'xianxia' => 'Xianxia',
+            'xuanhuan' => 'Xuanhuan',
+            'sports' => 'Sports',
+            'mature' => 'Mature',
+            'harem' => 'Harem',
+            'reverse_harem' => 'Reverse Harem'
+        ];
+
         $novel = Novel::find($id);
 
         if ($novel->user_id !== auth()->user()->id) {
             return redirect()->back();
         }
-        return view("novel.edit")->with("novel", $novel);
+        return view("novel.edit", compact('novel', 'genres'));
     }
 
     /**
@@ -104,7 +142,35 @@ class NovelController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+
+        $novel = Novel::find($id);
+        if ($novel->user_id !== auth()->user()->id) {
+            return redirect()->back();
+        }
+
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:255',
+            'description' => 'string|max:255|ascii',
+            'genres' => 'required|array|min:1',
+            'genres.*' => 'string|in:fantasy,sci_fi,mystery,thriller,romance,horror,action,comedy,slice_of_life,drama,adventure,dystopian,sports,mature,harem,reverse_harem',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator);
+        }
+        $genresArray = $request->input('genres');
+
+        $genresString = implode(",", $genresArray);
+
+        $novel->update(
+            [
+                "title" => $request->title,
+                "description" => $request->description,
+                "genre" => $genresString,
+            ]
+        );
+
+        return redirect()->route('home')->with(["success", "Novel Updated"]);
     }
 
     /**

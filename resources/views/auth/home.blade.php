@@ -4,7 +4,7 @@
         <div>
             @forelse ($novels as $novel)
             <div class="flex  bg-white overflow-hidden">
-                <img class="w-25 h-25 object-cover" src="https://via.placeholder.com/150" alt="Thumbnail">
+                <img class="w-14 h-25 object-cover" src="{{ asset('storage/'. $novel->cover_image) }}" alt="Thumbnail">
                 <div class="p-2 flex-1">
                     <h2 class="text-md font-bold text-gray-800">{{ $novel->title }}</h2>
                     <div class="novel-actions py-2 space-x-2">
