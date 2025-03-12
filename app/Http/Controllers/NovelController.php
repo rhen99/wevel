@@ -87,8 +87,9 @@ class NovelController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $novel = Novel::find($id);
 
+        return view("novel.novel")->with("novel", $novel);
     }
 
     /**

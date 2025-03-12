@@ -19,7 +19,7 @@ class ChapterController extends Controller
      */
     public function create()
     {
-        //
+        return view("chapter.create");
     }
 
     /**
