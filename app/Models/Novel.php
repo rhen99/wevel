@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
+use App\Models\Chapter;
 
 class Novel extends Model
 {
@@ -19,6 +20,6 @@ class Novel extends Model
     }
     public function chapters()
     {
-        return $this->hasMany(Novel::class);
+        return $this->hasMany(Chapter::class);
     }
 }
