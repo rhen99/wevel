@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Novel;
+use App\Models\Chapter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -55,9 +56,11 @@ class ChapterController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $novel_id, string $chapter_id)
     {
-        //
+        $chapter = Chapter::find($chapter_id);
+
+        return view('chapter.show')->with('chapter', $chapter);
     }
 
     /**

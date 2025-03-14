@@ -89,7 +89,9 @@ class NovelController extends Controller
     {
         $novel = Novel::find($id);
 
-        return view("novel.novel")->with("novel", $novel);
+        $chapters  = $novel->chapters;
+
+        return view("novel.novel", compact('novel', 'chapters'));
     }
 
     /**
