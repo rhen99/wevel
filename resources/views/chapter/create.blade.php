@@ -21,7 +21,7 @@
                 Chapter</button>
         </form>
     </div>
-    <script src="https://cdn.tiny.cloud/1/gs667bmylsttlnv63liyq0p9k9bwh3xugsz1buw2b4wshy4o/tinymce/7/tinymce.min.js"
+    <script src="https://cdn.tiny.cloud/1/{{ config('app.tinymce_key') }}/tinymce/7/tinymce.min.js"
         referrerpolicy="origin"></script>
     <script>
         tinymce.init({
