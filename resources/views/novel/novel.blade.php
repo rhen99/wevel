@@ -20,9 +20,19 @@
                 <p class="text-gray-700 flex-1">
                     Chapter {{ $chapter->chapter_number }} - {{ $chapter->title }}
                 </p>
-                <div>
+                <div class="flex space-x-3">
                     <a href="{{ route('chapters.show', ['chapter' => $chapter->id, 'novel' => $novel->id]) }}"
                         class="hover:text-cyan-700">Read</a>
+                    @if (auth()->user() && auth()->user()->id === $novel->user_id)
+                    <a href="{{ route('chapters.edit', ['chapter' => $chapter->id, 'novel' => $novel->id]) }}"
+                        class="hover:text-cyan-700">Edit</a>
+                    <a href="#" class="deleteBtn hover:text-cyan-700">Delete</a>
+                    <form action="{{ route('chapters.destroy', ['chapter' => $chapter->id, 'novel' => $novel->id]) }}"
+                        method="POST">
+                        @csrf
+                        @method('DELETE')
+                    </form>
+                    @endif
                 </div>
             </div>
             @empty
@@ -31,3 +41,14 @@
         </div>
     </div>
 </x-layout>
+<script>
+    const deleteBtn = document.querySelectorAll(".deleteBtn");
+    deleteBtn.forEach(btn => {
+        btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        if(confirm("Are you sure you want to delete this chapter?")){
+            btn.nextElementSibling.submit();
+        }
+    });        
+    });
+</script>

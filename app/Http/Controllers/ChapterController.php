@@ -9,19 +9,16 @@ use Illuminate\Support\Facades\Validator;
 
 class ChapterController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
+
 
     /**
      * Show the form for creating a new resource.
      */
     public function create(Novel $novel)
     {
+        if ($novel->user_id !== auth()->user()->id) {
+            return redirect()->back();
+        }
         return view("chapter.create")->with("novel", $novel);
     }
 
@@ -56,7 +53,7 @@ class ChapterController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $novel_id, string $chapter_id)
+    public function show(string $_, string $chapter_id)
     {
         $chapter = Chapter::find($chapter_id);
 
@@ -66,24 +63,52 @@ class ChapterController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Novel $novel, string $chapter_id)
     {
-        //
+        if ($novel->user_id !== auth()->user()->id) {
+            return redirect()->back();
+        }
+        $chapter = $novel->chapters()->find($chapter_id);
+
+        return view("chapter.edit", compact("chapter", "novel"));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Novel $novel, string $id)
     {
-        //
+        if ($novel->user_id !== auth()->user()->id) {
+            return redirect()->back();
+        }
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:255',
+            'content' => 'string|ascii',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+        $chapter = Chapter::find($id);
+
+        $chapter->update([
+            'title' => $request->title,
+            'content' => $request->content,
+        ]);
+        return redirect()->route('home')->with(["success", "Novel Updated"]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Novel $novel, string $id)
     {
-        //
+        if ($novel->user_id !== auth()->user()->id) {
+            return redirect()->back();
+        }
+
+        Chapter::find($id)->delete();
+
+        return redirect()->back();
     }
 }
