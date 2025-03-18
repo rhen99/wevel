@@ -19,6 +19,7 @@ Route::post("/authenticate", [LoginController::class, "authenticate"])->name("au
 
 Route::post("/logout", [LoginController::class, "logout"])->name('logout');
 Route::resource("novels", NovelController::class)->middleware("auth");
+Route::put("/novels/{id}/publish", [NovelController::class, "publish"])->name("publish")->middleware("auth");
 Route::prefix("{novel}")->middleware("auth")->group(function () {
     Route::resource("chapters", ChapterController::class);
 });

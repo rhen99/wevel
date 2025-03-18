@@ -18,6 +18,7 @@
 
 <body>
     <x-navbar></x-navbar>
+    <x-flash-message />
     {{ $slot }}
 </body>
 

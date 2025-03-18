@@ -79,7 +79,7 @@ class NovelController extends Controller
             "cover_image" => $imagePath
         ]);
 
-        return redirect()->route('home')->with(["success", "Novel Created"]);
+        return redirect()->route('home')->with(["type" => "success", "message" => "Novel Created"]);
     }
 
     /**
@@ -173,7 +173,7 @@ class NovelController extends Controller
             ]
         );
 
-        return redirect()->route('home')->with(["success", "Novel Updated"]);
+        return redirect()->route('home')->with(["type" => "success", "message" => "Novel Updated"]);
     }
 
     /**
@@ -189,6 +189,20 @@ class NovelController extends Controller
 
         $novel->delete();
 
-        return redirect()->back();
+        return redirect()->back()->with(["type" => "success", "message" => "Novel Deleted"]);
+    }
+    public function publish(string $id)
+    {
+        $novel = Novel::find($id);
+
+        if ($novel->user_id !== auth()->user()->id) {
+            return redirect()->back();
+        }
+
+        $novel->update(["is_published" => !$novel->is_published]);
+
+        $message = $novel->is_published ? "Novel Published" : "Novel Unpublished";
+
+        return redirect()->back()->with(["type" => "success", "message" => $message]);
     }
 }

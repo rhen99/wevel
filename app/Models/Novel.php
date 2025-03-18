@@ -12,7 +12,8 @@ class Novel extends Model
         "title",
         "description",
         "genre",
-        "cover_image"
+        "cover_image",
+        "is_published"
     ];
     public function user()
     {
