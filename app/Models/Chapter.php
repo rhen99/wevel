@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Novel;
+use App\Models\Comment;
 
 class Chapter extends Model
 {
@@ -15,5 +16,9 @@ class Chapter extends Model
     public function novel()
     {
         return $this->belongsTo(Novel::class);
+    }
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
     }
 }

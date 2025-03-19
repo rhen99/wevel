@@ -13,7 +13,7 @@
             <div class="mb-4">
                 <label for="content" class="block text-sm font-medium text-gray-700">Body</label>
                 <textarea id="content" name="content" rows="8"
-                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-cyan-500 focus:border-cyan-500"
+                    class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-cyan-500"
                     placeholder="Write your chapter...">{{old('content')}}</textarea>
                 @error('content') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
             </div>

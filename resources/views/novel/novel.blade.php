@@ -23,7 +23,7 @@
             </div>
         </div>
         <div>
-            @forelse ($chapters as $chapter)
+            @forelse ($novel->chapters as $chapter)
             <div class=" bg-white p-4 hover:bg-gray-200 flex">
                 <p class="text-gray-700 flex-1">
                     Chapter {{ $chapter->chapter_number }} - {{ $chapter->title }}

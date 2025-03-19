@@ -91,7 +91,7 @@ class NovelController extends Controller
 
         $chapters  = $novel->chapters;
 
-        return view("novel.novel", compact('novel', 'chapters'));
+        return view("novel.novel", compact('novel'));
     }
 
     /**
