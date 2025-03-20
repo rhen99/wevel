@@ -6,11 +6,14 @@ use App\Models\Novel;
 use App\Models\Chapter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Routing\Controller;
 
 class ChapterController extends Controller
 {
-
-
+    public function __construct()
+    {
+        $this->middleware("auth")->except('show');
+    }
     /**
      * Show the form for creating a new resource.
      */
@@ -33,7 +36,7 @@ class ChapterController extends Controller
 
         $validator = Validator::make($request->all(), [
             'title' => 'required|string|max:255',
-            'content' => 'string|ascii',
+            'content' => 'required|string|ascii',
         ]);
 
         if ($validator->fails()) {

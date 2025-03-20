@@ -2,19 +2,42 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Chapter;
 use Illuminate\Http\Request;
 use App\Models\Comment;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Routing\Controller;
 
 class CommentController extends Controller
 {
-
-
+    public function __construct()
+    {
+        $this->middleware("auth");
+    }
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Chapter $chapter)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'content' => 'required|string|ascii',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $user = auth()->user();
+
+        $user->comments()->create([
+            'content' => $request->content,
+            'name' => $user->name,
+            'username' => $user->username,
+            'chapter_id' => $chapter->id
+
+        ]);
+
+        return redirect()->back();
     }
 
 
@@ -29,8 +52,14 @@ class CommentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Chapter $chapter, string $id)
     {
-        //
+        $comment = $chapter->comments()->find($id);
+
+        if ($comment->user_id !== auth()->user()->id) {
+            return redirect()->back();
+        }
+        $comment->delete();
+        return redirect()->back();
     }
 }

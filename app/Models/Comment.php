@@ -8,6 +8,12 @@ use App\Models\User;
 
 class Comment extends Model
 {
+    protected $fillable = [
+        "username",
+        "name",
+        "content",
+        "chapter_id"
+    ];
     public function chapter()
     {
         return $this->belongsTo(Chapter::class);

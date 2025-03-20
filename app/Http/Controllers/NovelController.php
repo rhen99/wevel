@@ -4,11 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Novel;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Routing\Controller;
 
 class NovelController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware("auth")->except('show');
+    }
 
     public function create()
     {
@@ -89,9 +93,7 @@ class NovelController extends Controller
     {
         $novel = Novel::find($id);
 
-        $chapters  = $novel->chapters;
-
-        return view("novel.novel", compact('novel'));
+        return view("novel.novel")->with("novel", $novel);
     }
 
     /**
