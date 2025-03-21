@@ -44,9 +44,25 @@ class CommentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Chapter $chapter, string $id)
     {
-        //
+        $user = auth()->user();
+
+        $comment = $chapter->comments()->find($id);
+
+        if ($comment->user_id !== auth()->user()->id) {
+            return redirect()->back()->with(["error", "Unauthorized Action"]);
+        }
+        $validator = Validator::make($request->all(), [
+            'content' => 'required|string|ascii',
+        ]);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+        $comment->update([
+            "content" => $request->content
+        ]);
+        return redirect()->back();
     }
 
     /**
@@ -57,7 +73,7 @@ class CommentController extends Controller
         $comment = $chapter->comments()->find($id);
 
         if ($comment->user_id !== auth()->user()->id) {
-            return redirect()->back();
+            return redirect()->back()->with(["error", "Unauthorized Action"]);
         }
         $comment->delete();
         return redirect()->back();

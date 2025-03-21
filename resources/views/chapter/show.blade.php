@@ -38,7 +38,27 @@
                     <h3 class="text-xs">{{ $comment->username }}</h3>
                     <p class="py-2">
                         {{ $comment->content }}
+                        @if ($comment->updated_at && $comment->created_at != $comment->updated_at)
+                        <span class="text-xs text-gray-400 font-semibold">(edited)</span>
+                        @endif
                     </p>
+                    <form
+                        action="{{ route('comments.update', ['chapter' => $chapter->id, 'comment' => $comment->id]) }}"
+                        class="hidden" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <div class="flex">
+                            <div class="flex-1">
+                                <textarea name="content"
+                                    class=" block p-1 w-full resize-none h-8 border border-gray-300 rounded-md bg-white focus:ring-cyan-500">{{ $comment->content }}</textarea>
+                                @error('content') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
+                            </div>
+                            <div>
+                                <button type="submit"
+                                    class="text-sm bg-cyan-500 text-white font-semibold px-4 py-1">Update</button>
+                            </div>
+                        </div>
+                    </form>
                     @auth
                     <div class="comment-actions flex space-x-3">
                         @if (auth()->user()->id === $comment->user_id)
@@ -49,6 +69,7 @@
                             @csrf
                             @method('DELETE')
                         </form>
+                        <a href="#" class="editBtn underline hover:text-cyan-700">Edit</a>
                         @endif
                     </div>
                     @endauth
@@ -60,12 +81,32 @@
 </x-layout>
 <script>
     const deleteBtn = document.querySelectorAll(".deleteBtn");
+    const editBtn = document.querySelectorAll('.editBtn');
+    let editMode = false;
     deleteBtn.forEach(btn => {
         btn.addEventListener("click", (e) => {
         e.preventDefault();
         if(confirm("Are you sure you want to delete this comment?")){
             btn.nextElementSibling.submit();
         }
+    });        
+    });
+    editBtn.forEach(btn => {
+        btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        if(!editMode){
+            e.target.innerHTML = "Cancel";
+            e.target.parentNode.previousElementSibling.previousElementSibling.classList.add("hidden");
+            e.target.parentNode.previousElementSibling.classList.remove("hidden");
+            editMode = true;
+        }else{
+            e.target.innerHTML = "Edit";
+            e.target.parentNode.previousElementSibling.previousElementSibling.classList.remove("hidden");
+            e.target.parentNode.previousElementSibling.classList.add("hidden");
+            editMode = false;
+        }
+        
+        
     });        
     });
 </script>

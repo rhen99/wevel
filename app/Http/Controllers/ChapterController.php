@@ -112,6 +112,6 @@ class ChapterController extends Controller
 
         Chapter::find($id)->delete();
 
-        return redirect()->back()->with(["type" => "success", "message" => "Chapter Deleted"]);
+        return redirect()->back()->with(["success", "Chapter Deleted"]);
     }
 }
