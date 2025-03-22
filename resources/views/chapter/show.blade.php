@@ -12,6 +12,7 @@
         </div>
         <div class="comment-section">
             @auth
+            @if ($chapter->novel->is_published)
             <form class="mb-4" action="{{ route('comments.store', ['chapter' => $chapter->id]) }}" method="post">
                 @csrf
                 <div class="mb-4">
@@ -24,6 +25,9 @@
                     class="text-md font-bold px-4 py-2 bg-cyan-500 text-white hover:bg-cyan-600 rounded-lg">Post
                     Comment</button>
             </form>
+            @else
+            <p class="mb-4">This is novel is not published.</p>
+            @endif
             @else
             <p class="mb-4">You need an account to comment. Please <a
                     class="underline  font-semibold hover:text-cyan-500" href="{{ route('login') }}">sign in</a> or <a

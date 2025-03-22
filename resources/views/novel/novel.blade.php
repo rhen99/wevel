@@ -1,5 +1,11 @@
 <x-layout>
     <div class="container mx-auto p-6">
+        @if (!$novel->is_published)
+        <p class="p-3 mb-4 bg-yellow-100 text-yellow-600 rounded-lg font-semibold">This novel is currently not
+            published. Go to
+            <a href="{{ route('home') }}" class="underline"> Dashboard</a>
+        </p>
+        @endif
         <h2 class="text-xl font-semibold mb-4">{{ $novel->title }}</h2>
         @if (auth()->user() && auth()->user()->id === $novel->user_id)
         <div class="p-4">
@@ -9,7 +15,6 @@
             </a>
         </div>
         @endif
-
         <div class="flex w-full p-4">
             <div class="flex-shrink-0">
                 <img src="{{ asset('storage/'. $novel->cover_image) }}" alt="Novel Cover"

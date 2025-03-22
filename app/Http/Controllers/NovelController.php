@@ -6,12 +6,14 @@ use Illuminate\Http\Request;
 use App\Models\Novel;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Routing\Controller;
+use App\Http\Middleware\CheckIfNovelIsPublished;
 
 class NovelController extends Controller
 {
     public function __construct()
     {
         $this->middleware("auth")->except('show');
+        $this->middleware(CheckIfNovelIsPublished::class)->only('show');
     }
 
     public function create()

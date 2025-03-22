@@ -3,16 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Novel;
-use App\Models\Chapter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Routing\Controller;
+use App\Http\Middleware\CheckIfNovelIsPublished;
 
 class ChapterController extends Controller
 {
     public function __construct()
     {
         $this->middleware("auth")->except('show');
+        $this->middleware(CheckIfNovelIsPublished::class)->only('show');
     }
     /**
      * Show the form for creating a new resource.
@@ -56,9 +57,9 @@ class ChapterController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $_, string $chapter_id)
+    public function show(Novel $novel, string $chapter_id)
     {
-        $chapter = Chapter::find($chapter_id);
+        $chapter = $novel->chapters()->find($chapter_id);
 
         return view('chapter.show')->with('chapter', $chapter);
     }
@@ -92,7 +93,7 @@ class ChapterController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-        $chapter = Chapter::find($id);
+        $chapter = $novel->chapters()->find($id);
 
         $chapter->update([
             'title' => $request->title,
@@ -109,8 +110,9 @@ class ChapterController extends Controller
         if ($novel->user_id !== auth()->user()->id) {
             return redirect()->back();
         }
+        $chapter = $novel->chapters()->find($id);
 
-        Chapter::find($id)->delete();
+        $chapter->delete();
 
         return redirect()->back()->with(["success", "Chapter Deleted"]);
     }
